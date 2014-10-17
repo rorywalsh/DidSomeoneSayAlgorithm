@@ -1,0 +1,1 @@
+Full source code for presetation given at Pictilin 2014 at DKiT. This code is licensed under the GNU General Public License. Terms and conditions can be found at: http://www.gnu.org/copyleft/gpl.html
