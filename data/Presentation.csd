@@ -1,6 +1,6 @@
 <CsoundSynthesizer>
 <CsOptions>
--+rtaudio=jack odac -m0d
+-+rtaudio=jack -odac -m0d 
 </CsOptions>
 <CsInstruments>
 sr = 44100
@@ -11,20 +11,23 @@ nchnls = 2
 
 ;synth simple 
 instr 10
-i1 active 10
 aexp expon p6+0.001, p3, 0.01
 a1 oscil aexp, cpsmidinn(p4), 1
-if(p5==0)then
-outs a1, a1
-else
-outs a1*p5, a1*(1-p5)
-endif
+kpan randh 1, .01, 2
+outs a1*abs(kpan), a1*(1-abs(kpan)) 
 endin
  
+instr 13
+aexp expon .4, p3, 0.01
+a1 oscil aexp, p4, 1
+kpan randh 1, .01, 2
+outs a1*abs(kpan), a1*(1-abs(kpan)) 
+endin
+
 ;synth simple sawish waveform... 
 instr 15
 aexp expon p5, p3, 0.01
-a1 oscil aexp, p4, 99
+a1 oscil aexp, cpsmidinn(p4), 99
 kpan randh 1, .01, 2
 outs a1*abs(kpan), a1*(1-abs(kpan)) 
 endin
@@ -57,7 +60,7 @@ endin
 </CsInstruments>
 <CsScore>
 f1 0 1024 10 1
-f99 0 2 10 1
+f99 0 1024 10 1 0 .3 0 .17
 f2 0 0 1 "random.wav" 0 4 1
 f3 0 0 1 "1.wav" 0 4 1
 f4 0 0 1 "2.wav" 0 4 1

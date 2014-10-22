@@ -1,3 +1,5 @@
+//this file holds different transitions and entries for slides
+
 //class for storing position and size of 
 //textboxes so they can be faded out
 class AreaWipe{
@@ -10,9 +12,6 @@ class AreaWipe{
  }  
 };
 
-
-
-//this file holds different transitions and entries for slides
 void fadeOutIfNeeded()
 {
   if(clearPrevious!=0 && screenWipes<=fadeOutFrames){

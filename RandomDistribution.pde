@@ -10,7 +10,7 @@ void drawUniformDist()
     fill(0, 0, 0, 20);
     rect(0, 0, width, height); 
     y = ((y/height)*60)+40;//scale and make MIDI note
-    String scoEvent = "i10 0 3 "+(int)y+" "+x/width+" "+random(1);
+    String scoEvent = "i10 0 1 "+String.valueOf(y)+" "+String.valueOf(x/width)+" "+random(1);
     cs.event(scoEvent);   
 }
 
@@ -27,8 +27,9 @@ void drawLinearDist()
     fill(255, (x/width) * 255, 0, (y/height) * 255);    
     ellipse(x,y, amp*80, amp*80); 
     fill(0, 0, 0, 10);
-    rect(0, 0, width, height); 
-    String scoEvent = "i10 0 3 "+(int)y+" "+x/width+" "+random(1);
+    rect(0, 0, width, height);
+    y = ((y/height)*60)+40;//scale and make MIDI note 
+    String scoEvent = "i10 0 1 "+String.valueOf(y)+" "+String.valueOf(x/width)+" "+random(1);
     cs.event(scoEvent);      
 }
 
@@ -52,7 +53,8 @@ void drawExponDist()
     ellipse(x,y, amp*80, amp*80); 
     fill(0, 0, 0, 10);
     rect(0, 0, width, height); 
-    String scoEvent = "i10 0 3 "+(int)y+" "+x/width+" "+random(1);
+    y = ((y/height)*60)+40;//scale and make MIDI note
+    String scoEvent = "i10 0 1 "+String.valueOf((int)y)+" "+String.valueOf(x/width)+" "+random(1);
     cs.event(scoEvent);      
 }
 
@@ -96,7 +98,10 @@ void drawAllThreeDistibutionCurves()
     ellipse(x,y, amp*80, amp*80); 
     fill(0, 0, 0, 10);
     rect(0, 0, width, height); 
-    String scoEvent = "i10 0 3 "+(int)y+" "+x/width+" "+random(1);
-    cs.event(scoEvent);    
+    y = ((y/height)*60)+40;//scale and make MIDI note
+    String scoEvent = "i10 0 1 "+String.valueOf((int)y)+" "+String.valueOf(x/width)+" "+random(1);
+    cs.event(scoEvent);   
+
+    right_mouseClickCount = (right_mouseClickCount>2 ? 0 : right_mouseClickCount++); 
  
 }

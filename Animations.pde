@@ -1,4 +1,13 @@
 //this file holds a few silly little visual and audio animations
+int notes[] = {48, 60, 65, 55, 71, 64, 60, 72};
+int one[] = {60, 64, 67, 72}; //major triad
+int two[] = {62, 65, 69, 74}; //minor triad
+int four[] = {65, 69, 72, 77}; //major traid
+int five[] = {67, 62, 71, 79}; //major triad
+int six[] = {57, 60, 64, 69}; //minor triad
+int[][] drumPatterns = new int[16][16];
+int[][] notePatterns = new int[5][8];
+int currentNotePattern=0;
 
 void zeroAllPatterns()
 {
@@ -7,29 +16,165 @@ for (int i = 0; i < 16; i++) {
 			drumPatterns[i][j]=0;
 		}
 	}
+//fill note arrays for use in note pattern demo
+for(int i=0;i<8;i++)
+	notePatterns[0][i]=(i<4 ? one[i] : one[i-4]+12);
+for(int i=0;i<8;i++)
+	notePatterns[1][i]=(i<4 ? two[i] : two[i-4]+12);
+for(int i=0;i<8;i++)
+	notePatterns[2][i]=(i<4 ? four[i] : four[i-4]+12);
+for(int i=0;i<8;i++)
+	notePatterns[3][i]=(i<4 ? five[i] : five[i-4]+12);
+for(int i=0;i<8;i++)
+	notePatterns[4][i]=(i<4 ? six[i] : six[i-4]+12);
+
+
 }
+
+
+void simpleFormalGrammarDemo()
+{
+// //rules for grammar 
+// S->aSBC ¦ aBC
+// CB->BC
+// aB->ab
+// bB->bb
+// bC-> bc
+// cC->cc
+
+textAlign(LEFT);
+frameCount++;
+if(frameCount%35==0){
+	typeIndex++;
+}
+
+color col = color(200, 0, 0);
+
+switch (typeIndex){
+	case 1:
+		fill(0);
+		rect(50, 100, 100, 50);
+		fill(col);
+		text("S => aSBC", 50, 100, 150, 50);
+		break;
+	case 2:
+		fill(0);
+		rect(170, 100, 500, 50);
+		fill(col);
+		text(" => aaBCBC (by using the rule S->aBc)", 170, 100, 500, 50);
+		break;
+	case 3:
+		fill(0);
+		rect(150, 150, 500, 50);
+		fill(col);
+		text(" => aabCBC (by using the rule aB->ab)", 150, 150, 500, 50);
+		break;
+	case 4:
+		fill(0);
+		rect(150, 200, 500, 50);
+		fill(col);	
+		text(" => aabBCC (by using the rule CB->BC)", 150, 200, 500, 50);
+		break;
+	case 5:
+		fill(0);
+		rect(150, 250, 500, 50);
+		fill(col);
+		text(" => aabbCC (by using the rule bB->bb)", 150, 250, 500, 50);
+		break;
+	case 6:
+		fill(0);
+		rect(150, 300, 500, 50);
+		fill(col);
+		text(" => aabbcC (by using the rule bC->bc)", 150, 300, 500, 50);
+		break;
+	case 7:
+		fill(0);
+		rect(150, 350, 500, 50);
+		fill(col);
+		text(" => aabbcc (by using the rule cC->cc)", 150, 350, 500, 50);
+		break;
+	default:
+}
+	right_mouseClickCount = (right_mouseClickCount>2 ? 0 : right_mouseClickCount++);
+}
+
 
 void playPatterns(String playback)
 {
-	String scoEvent="";
-	int harms[] = {800, 700, 600, 500, 400, 300, 200, 100};
-
 	//16 drums sounds and 8 note patterns
 	int cols=16, rows=8;
 	frameCount++;
 	//our master index
 	int verticalPosition=frameCount%notesToPlay;
-	stroke(255);
-	int xPos = width/6;
+	int xPos = 210;
 	int yPos = height/4;
+	stroke(50);
+	fill(0);
+	textSize(50);
+	textAlign(CENTER);
+	rect(50, 50, 700, 150);
+	fill(200);
+	text("Random Patterns", 50, 50, 400, 100);
+	textSize(22);
+	text("LEFT and RIGHT reduce length of pattern. UP/DOWN keys speed up and slow down pattern. SPACE key repeats. All other keys cause a change of pattern to happen", 50, 100, 700, 100);
+	fill(0, 0, 0, 10);
+	//background(0, 50);
+	String scoEvent="";
+	float randStroke = 50;
+	stroke(randStroke);
+	// int harms[] = {800, 700, 600, 500, 400, 300, 200, 100};
+
+	for (int i = 0; i < notesToPlay; i++) {
+		for (int j = 0; j < rows; j++) {
+			    if(drumPatterns[i][j]==1){
+				   // fill(200, 200, 200);
+				   // stroke(200, 200, 200);
+				   // alpha(10);
+
+				    ellipse(xPos+(i+i*60), yPos+(j+j*60), 20, 20);
+				}
+				else{
+					stroke(50);
+				    fill(0, 0, 0, 50);
+				    ellipse(xPos+(i+i*60), yPos+(j+j*60), 20, 20);				
+				}
+				fill(0);
+				rect(xPos-160, yPos-16+(j+j*60), 100, 40, 10);
+				fill(200);
+				if(playback=="samples")
+					text("Sound "+String.valueOf(j+1), xPos-160, yPos-12+(j+j*60), 100, 40);
+				else
+					text("MIDI "+String.valueOf(notePatterns[currentNotePattern][7-j]), xPos-160, yPos-12+(j+j*60), 100, 40);
+				fill(0, 0, 0, 10);
+				}
+		}
+
+	stroke(0);
+	fill(0);
+	rect(xPos+(notesToPlay*60)-20, yPos-30, 2000, 500);
 
 	if(keyPressed){
 		showScrubber=true;
-		if (key == CODED) {
-    		if (keyCode == UP){
-    			frameRate(frameRate+1);
 
-    		}
+		switch(key){
+		case '1':
+			currentNotePattern=0;
+			break;
+		case '2':
+			currentNotePattern=1;
+			break;
+		case '4':
+			currentNotePattern=2;
+			break;
+		case '5':
+			currentNotePattern=3;
+			break;
+		case '6':
+			currentNotePattern=4;
+			break;
+		case CODED:
+    		if (keyCode == UP)
+    			frameRate(frameRate+1);
     		else if(keyCode == DOWN)
     			frameRate(frameRate-1);
     		else if(keyCode == LEFT){
@@ -38,93 +183,65 @@ void playPatterns(String playback)
     		else if(keyCode == RIGHT){
     			if(notesToPlay<16)notesToPlay++;
     		}
-    	}
-		else if(key==32)
+    		break;
+    	case 'l':
+    		if(hitProb<100)hitProb+=5;
+    		break;
+    	case 'h':
+    		if(hitProb>0)hitProb-=5;
+    		break;
+		case 32:
 			frameCount--;
-		else{
-			background(0);
+			break;
+		default:
+			//background(0);
 			//run through array and generate new patterns for each drum
-			for (int i = 0; i < cols; i++) {
+			for (int i = 0; i < notesToPlay; i++) {
 			  for (int j = 0; j < rows; j++) {
 			  	textAlign(RIGHT);
-			  	if(playback=="samples"){
-					fill(0, 255, 0);
-					rect(xPos-150, yPos-20+(j+j*60), 100, 40);
-					fill(0);
-			  		drumPatterns[i][j] = (random(100)>80.0 ? 1 : 0);
-			  		text("Drum "+String.valueOf(j+1), xPos-160, yPos-16+(j+j*60), 100, 40);
-			  	}
-			  	else if(playback=="notes"){
-					fill(255, 0, 0);
-					rect(xPos-150, yPos-20+(j+j*60), 100, 40);
-					fill(0);
-			  		drumPatterns[i][j] = (random(100)>80.0 ? 1 : 0);
-			  		text("Harm_"+String.valueOf(8-j), xPos-156, yPos-16+(j+j*60), 100, 40);
-			  	}
-
-
 			    if(drumPatterns[i][j]==1){
-				    fill(200, 200, 200);
-				    ellipse(xPos+(i+i*60), yPos+(j+j*60), 20, 20);
+				    //fill(10, 10, 10, 10);
+				    //ellipse(xPos+(i+i*60), yPos+(j+j*60), 20, 20);
 				}
 				else{
 				    fill(0);
+				    stroke(randStroke);
 				    ellipse(xPos+(i+i*60), yPos+(j+j*60), 20, 20);				
 				}
+			  	if(playback=="samples"){
+			  		drumPatterns[i][j] = (random(100)>hitProb ? 1 : 0);
+			  	}
+			  	else if(playback=="notes"){
+			  		drumPatterns[i][j] = (random(100)>hitProb ? 1 : 0);
+			  	}
 			  }
 			}
 		}
 
 	}
 
-	if(showScrubber==true){
-		fill(0);
-		rect(50, 50, 700, 150);
-		stroke(0);
-		if(playback=="samples")
-			fill(255, 0, 0);
-		else 
-			fill(0, 255, 0);	
-		textSize(50);
-		textAlign(CENTER);
-		text("Random Patterns", 50, 50, 400, 100);
-		textSize(22);
-		text("LEFT and RIGHT reduce length of pattern. UP/DOWN keys speed up and slow down pattern. SPACE key repeats. All other keys cause a change of pattern to happen", 50, 100, 700, 100);
-	}
-
 	//now run through each entire colum one by one and play the drum if
-	  		for (int i = 0; i < cols; i++) {
+	  		for (int i = 0; i < 8; i++) {
 	  			//String mess = "DrumTrack:"+String.valueOf(j)+ " "+String.valueOf(drumPatterns[i][j]);
 	  			if(drumPatterns[verticalPosition][i]==1){
 	  				if(playback=="samples"){
+	  					stroke(255);
+	  					fill(255, 255*verticalPosition/16.f, 10);
+	  					ellipse(xPos+(verticalPosition+verticalPosition*60), yPos+(i+i*60), 20, 20);
 		  				scoEvent = "i100 0 1.8 "+String.valueOf(i+100);
 		  				cs.event(scoEvent); 
 	  				}
 		  			else if (playback=="notes"){
-		  				scoEvent = "i15 0 .5 "+String.valueOf(harms[i])+" "+String.valueOf(.6*(800-harms[i])/800);
+	  					stroke(255);
+	  					fill(255, 255*verticalPosition/16.f, 10);
+	  					ellipse(xPos+(verticalPosition+verticalPosition*60), yPos+(i+i*60), 20, 20);
+		  				scoEvent = "i15 0 .5 "+String.valueOf(notePatterns[currentNotePattern][7-i])+" "+String.valueOf(.2);
 		  				cs.event(scoEvent); 
-		  			}
-
-		  			
+		  			}		  			
 	  			}
 
-	  		for(int index=0;index<cols;index++){
-                 if(showScrubber==true){
-	      				fill(0, 0, 0, 0);
-	      				if(verticalPosition==index){
-	      					if(playback=="samples")
-	      						stroke(0, 255, 0);
-	      					else 
-	      						stroke(255, 0, 0);
-	      				}
-	      				else
-	      					stroke(0, 0, 0);
-	      				rect(xPos-23+(index+index*60), yPos-30, 46, 500);
-  		  			}
-                }
-
 	}	
-
+	stroke(50);
 
 
 }
@@ -132,12 +249,6 @@ void playPatterns(String playback)
 
 void cycleThroughChords()
 {
-	int one[] = {60, 64, 67, 72}; //major triad
-	int two[] = {62, 65, 69, 74}; //minor triad
-	int four[] = {65, 69, 72, 77}; //major traid
-	int five[] = {67, 62, 71, 79}; //major triad
-	int six[] = {55, 57, 60, 69}; //minor triad
-
 	color col = color(255, 255, 255, 30); 
 	float angle = 1.4;
 	int noteIndex = (int)random(4);
@@ -247,7 +358,7 @@ void printRandomToScreen()
   textSize(20+random(20));
   fill(random(255), random(255), random(255)); 
   text("Random", random(width), random(height), 180, 100); 
-  String scoEvent = "i11 0 "+random(0.25)+1+" 2 0";
+  String scoEvent = "i11 0 "+String.valueOf(random(1)+.5)+" 2 0";
   cs.event(scoEvent);
 }
 
@@ -255,7 +366,6 @@ void printRandomToScreen()
 void ballBounce()
 {
   // Update the position of the shape
-  background(0);
   textAlign(RIGHT);
   textSize(24);
   ballXpos = ballXpos + ( 10.0 * xDir );
@@ -266,7 +376,7 @@ void ballBounce()
     R = int(random(255));
     G = int(random(255));
     B = int(random(255));
-    String scoEvent = "i10 0 3 "+random(500)+100+" 0 .5";
+    String scoEvent = "i10 0 3 "+String.valueOf(random(40)+40)+" 0 .5";
     cs.event(scoEvent);
   }
   if (ballYpos > height-60 || ballYpos < 60) {
@@ -275,14 +385,16 @@ void ballBounce()
     R = int(random(255));
     G = int(random(255));
     B = int(random(255));
-    String scoEvent = "i10 0 3 "+random(500)+100+" 0 .5";
+    String scoEvent = "i10 0 3 "+String.valueOf(random(40)+40)+" 0 .5";
     cs.event(scoEvent);
   }
   
-  fill(R+smoothSine, G+smoothSine, B+smoothSine);
-  text("One even made its way into this slide...", 690, 340, 400, 144); 
-  smoothSine-=1;
-  ellipse(ballXpos, ballYpos, 60, 60);  
+  //fill(R+smoothSine, G+smoothSine, B+smoothSine);
+  //fill(255);
+  //text("One even made its way into this slide...", 690, 340, 400, 144); 
+  fill(R+smoothSine, 0, B+smoothSine);
+  smoothSine-=2;
+  ellipse(ballXpos, ballYpos, 60, 60); 
 }
 
 
@@ -292,7 +404,9 @@ void showTypesOfDistributionCurves(int index)
   fill(0);
   rect(0, 0, width, height);
   fill(200);
-  String str = "Probability distributions provide clever ways to generate pseudo random events, and for the most part, they are easy to implement in any language. Apart from the three simplest types shown here, there are many more distributions which can all be used to create interesting data.";
+  String scoEvent = "i15 0 3 "+String.valueOf(random(700)+50)+".5";
+  cs.event(scoEvent);
+  String str = "Probability distributions provide clever ways to generate pseudo random events, and for the most part, they are easy to implement in any language.\nApart from the three simplest types shown here, there are many more distributions which can all be used to create interesting data.";
   if(index==0)
         drawTextBox(100, 140, 600, 700, 24, LEFT, color(200, 200, 200), str+" Concave, "); 
   if(index==1)
